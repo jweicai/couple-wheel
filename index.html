@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#f7ead8" />
+    <meta name="description" content="情侣日常 50 件小事，转一下，把平凡日子过成约会。" />
+    <title>我们的小日子 · 情侣日常大转盘</title>
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cpath fill='%23b52f2f' d='M32 55S7 41 7 21c0-13 17-17 25-5 8-12 25-8 25 5 0 20-25 34-25 34Z'/%3E%3C/svg%3E" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">跳到主要内容</a>
+
+    <main id="main" class="app-shell">
+      <header class="topbar">
+        <button class="icon-button" id="openTasks" type="button" aria-label="查看 50 件小事清单">
+          <svg aria-hidden="true" viewBox="0 0 24 24">
+            <path d="M4 5.5h2.5M4 12h2.5M4 18.5h2.5M10 5.5h10M10 12h10M10 18.5h10" />
+          </svg>
+        </button>
+
+        <div class="brand-mark" aria-label="我们的小日子">
+          <span class="brand-mark__line"></span>
+          <span>LOVER'S DAY</span>
+          <span class="brand-mark__line"></span>
+        </div>
+
+        <button class="icon-button" id="shareApp" type="button" aria-label="分享这个转盘">
+          <svg aria-hidden="true" viewBox="0 0 24 24">
+            <circle cx="18" cy="5" r="2.5" />
+            <circle cx="6" cy="12" r="2.5" />
+            <circle cx="18" cy="19" r="2.5" />
+            <path d="m8.3 10.9 7.4-4.5M8.3 13.1l7.4 4.5" />
+          </svg>
+        </button>
+      </header>
+
+      <section class="hero" aria-labelledby="pageTitle">
+        <p class="eyebrow"><span>NO.</span> 01 — 50</p>
+        <h1 id="pageTitle">把今天，<br /><em>过成约会。</em></h1>
+        <p class="hero__copy">不用想去哪，也不用等纪念日。<br />转一下，认真完成一件小事。</p>
+      </section>
+
+      <section class="game" aria-label="情侣日常大转盘">
+        <div class="wheel-caption" id="wheelCaption" aria-live="polite">下一件小事，交给运气</div>
+
+        <div class="wheel-wrap">
+          <div class="pointer" aria-hidden="true">
+            <svg viewBox="0 0 44 54"><path d="M22 50 4 16C-1 7 5 1 14 5l8 4 8-4c9-4 15 2 10 11L22 50Z" /></svg>
+          </div>
+          <div class="wheel-rim">
+            <canvas id="wheel" role="img" aria-label="包含 50 件情侣日常小事的转盘"></canvas>
+            <div class="wheel-center" aria-hidden="true">
+              <span class="wheel-center__small">DAILY</span>
+              <strong>50</strong>
+              <span class="wheel-center__small">THINGS</span>
+            </div>
+          </div>
+        </div>
+
+        <button class="spin-button" id="spinButton" type="button">
+          <span class="spin-button__spark" aria-hidden="true"></span>
+          <span id="spinButtonText">转一件小事</span>
+          <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M5 12h13M14 7l5 5-5 5" /></svg>
+        </button>
+
+        <label class="skip-toggle">
+          <input id="skipCompleted" type="checkbox" checked />
+          <span class="toggle-ui" aria-hidden="true"></span>
+          <span>转盘自动跳过已完成的小事</span>
+        </label>
+
+        <div class="progress-card" aria-label="挑战进度">
+          <div>
+            <span class="progress-card__label">我们的进度</span>
+            <strong><span id="completedCount">0</span><small> / 50</small></strong>
+          </div>
+          <div class="progress-track" aria-hidden="true"><span id="progressBar"></span></div>
+          <span class="progress-card__note" id="progressNote">第一件小事，就从今天开始</span>
+        </div>
+      </section>
+
+      <footer class="footer-note">
+        <span>THE LITTLE THINGS</span>
+        <span class="footer-note__heart" aria-hidden="true"></span>
+        <span>MAKE US, US.</span>
+      </footer>
+    </main>
+
+    <div class="sheet-backdrop" id="backdrop" hidden></div>
+
+    <section class="bottom-sheet result-sheet" id="resultSheet" role="dialog" aria-modal="true" aria-labelledby="resultTitle" hidden>
+      <div class="sheet-handle" aria-hidden="true"></div>
+      <button class="sheet-close" data-close-sheet type="button" aria-label="关闭结果">
+        <svg aria-hidden="true" viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18" /></svg>
+      </button>
+      <div class="result-stamp" id="resultNumber">#01</div>
+      <p class="result-kicker" id="resultCategory">认真相爱 · 在家也浪漫</p>
+      <h2 id="resultTitle">一起做顿晚饭</h2>
+      <p class="result-desc" id="resultDescription">从买菜开始分工，摆好餐盘再开动。今天不赶时间，只好好吃饭。</p>
+      <div class="result-actions">
+        <button class="primary-action" id="completeTask" type="button">
+          <svg aria-hidden="true" viewBox="0 0 24 24"><path d="m5 12 4 4L19 6" /></svg>
+          <span>我们完成啦</span>
+        </button>
+        <button class="secondary-action" id="spinAgain" type="button">这次换一个</button>
+      </div>
+    </section>
+
+    <section class="bottom-sheet list-sheet" id="listSheet" role="dialog" aria-modal="true" aria-labelledby="listTitle" hidden>
+      <div class="sheet-handle" aria-hidden="true"></div>
+      <button class="sheet-close" data-close-sheet type="button" aria-label="关闭清单">
+        <svg aria-hidden="true" viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18" /></svg>
+      </button>
+      <div class="list-heading">
+        <p class="result-kicker">OUR LITTLE LIST</p>
+        <h2 id="listTitle">50 件小事</h2>
+        <p>每完成一件，就给平凡日子盖一枚章。</p>
+      </div>
+      <div class="filter-tabs" role="tablist" aria-label="筛选小事">
+        <button class="filter-tab is-active" data-filter="all" role="tab" aria-selected="true" type="button">全部 50</button>
+        <button class="filter-tab" data-filter="todo" role="tab" aria-selected="false" type="button">待完成</button>
+        <button class="filter-tab" data-filter="done" role="tab" aria-selected="false" type="button">已完成</button>
+      </div>
+      <div class="task-list" id="taskList" tabindex="0"></div>
+      <button class="reset-button" id="resetProgress" type="button">重新开始这份清单</button>
+    </section>
+
+    <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+
+    <script src="tasks.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>
