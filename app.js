@@ -9,6 +9,8 @@
   const elements = {
     wheel: document.getElementById("wheel"),
     wheelRim: document.querySelector(".wheel-rim"),
+    centerSpin: document.getElementById("centerSpin"),
+    centerSpinHint: document.getElementById("centerSpinHint"),
     wheelCaption: document.getElementById("wheelCaption"),
     spinButton: document.getElementById("spinButton"),
     spinButtonText: document.getElementById("spinButtonText"),
@@ -39,6 +41,7 @@
   let activeFilter = "all";
   let activeSheet = null;
   let returnFocusTo = null;
+  let lastSpinTrigger = null;
   let toastTimer = null;
 
   function loadState() {
@@ -123,9 +126,10 @@
     return tasks.filter((task) => !state.completed.includes(task.id));
   }
 
-  function spin() {
+  function spin(trigger = elements.spinButton) {
     if (isSpinning) return;
     closeSheet(false);
+    lastSpinTrigger = trigger;
 
     const candidates = getCandidates();
     if (!candidates.length) {
@@ -144,8 +148,11 @@
 
     isSpinning = true;
     elements.spinButton.disabled = true;
+    elements.centerSpin.disabled = true;
     elements.spinButton.setAttribute("aria-busy", "true");
+    elements.centerSpin.setAttribute("aria-busy", "true");
     elements.spinButtonText.textContent = "正在挑选…";
+    elements.centerSpinHint.textContent = "转动中";
     elements.wheelCaption.textContent = "今天会转到哪一件？";
     elements.wheelRim.classList.add("is-spinning");
     elements.wheel.style.transform = `rotate(${currentRotation}deg)`;
@@ -159,8 +166,11 @@
     if (!isSpinning || !selectedTask) return;
     isSpinning = false;
     elements.spinButton.disabled = false;
+    elements.centerSpin.disabled = false;
     elements.spinButton.removeAttribute("aria-busy");
+    elements.centerSpin.removeAttribute("aria-busy");
     elements.spinButtonText.textContent = "再转一件小事";
+    elements.centerSpinHint.textContent = "再转一次";
     elements.wheelRim.classList.remove("is-spinning");
     elements.wheelCaption.textContent = `今天：${selectedTask.title}`;
     elements.wheel.setAttribute("aria-label", `转盘结果：第 ${selectedTask.id} 件，${selectedTask.title}`);
@@ -169,7 +179,7 @@
     state.history = state.history.slice(-30);
     saveState();
     populateResult(selectedTask);
-    openSheet(elements.resultSheet, elements.spinButton);
+    openSheet(elements.resultSheet, lastSpinTrigger || elements.spinButton);
   }
 
   function populateResult(task) {
@@ -384,11 +394,12 @@
     }, 3200);
   }
 
-  elements.spinButton.addEventListener("click", spin);
+  elements.spinButton.addEventListener("click", () => spin(elements.spinButton));
+  elements.centerSpin.addEventListener("click", () => spin(elements.centerSpin));
   elements.completeTask.addEventListener("click", toggleSelectedTask);
   elements.spinAgain.addEventListener("click", () => {
     closeSheet(false);
-    window.setTimeout(spin, prefersReducedMotion.matches ? 20 : 320);
+    window.setTimeout(() => spin(elements.spinButton), prefersReducedMotion.matches ? 20 : 320);
   });
   elements.openTasks.addEventListener("click", openList);
   elements.shareApp.addEventListener("click", shareApp);
